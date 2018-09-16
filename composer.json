@@ -1,0 +1,35 @@
+{
+  "name": "stephenlake/laravel-queryable",
+  "description": "Laravel HTTP query parameter based model filtering and searching.",
+  "type": "library",
+  "license": "MIT",
+  "authors": [{
+    "name": "Stephen Lake",
+    "email": "stephen@closurecode.com"
+  }],
+  "require": {
+    "illuminate/support": "~5.4.0|~5.5.0|~5.6.0|~5.7.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~7.0",
+    "laravel/framework": "~5.5.0|~5.6.0|~5.7.0",
+    "orchestra/testbench": "~3.4.0|~3.5.0|~3.6.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Queryable\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Queryable\\Tests\\": "tests/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Queryable\\QueryableServiceProvider"
+      ]
+    }
+  }
+}
