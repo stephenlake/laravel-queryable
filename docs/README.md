@@ -110,6 +110,15 @@ Filter where `body` contains (`=*<term>*`) `foobar`
 
 Filter where `created_at` is greater than or equal (`>=`) to `2018`
 
+## Filtering on Relationships
+
+Filtering through relationships is as simple as prefixing the relationship tree with period (`.`):
+
+Example:
+`http://localhost?filters=on&threads.comments.title=*foobar*`
+
+**Note:** The `getQueryables` array would need to return the `threads.comments.title` as a queryable attribute in order for this to work.
+
 ## Ordering Results
 
 In order to sort your results in desired order simple append the `orderBy` query paramter to your query string with a value of the column you would like to order by:
@@ -122,14 +131,14 @@ Add a second value of `asc` or `desc` to define the direction of the ordering:
 
 ## Available Operators
 
-| Operator  | Description              | Example                                          |
-| ----------|:-------------------------| :------------------------------------------------|
-| `=`       | Equal To                 | `column=value`                                   |
-| `!=`      | Not Equal to             | `column!=value`                                  |
-| `>`       | Greater Than             | `column>value`                                   |
-| `>=`      | Greater Than Or Equal To | `column>value`                                   |
-| `<`       | Less Than                | `column>value`                                   |
-| `<=`      | Less Than OR Equal To    | `column>value`                                   |
-| `=`       | Like (Case-Insenitive)   | `column=*value*`                                 |
-| `=~`      | Where In                 | `column=~value1,value2,value3`                   |
-| `!=~`     | Where Not In             | `column!=~value1,value2,value3`                  |
+| Operator | Description              | Example                         |
+| -------- | :----------------------- | :------------------------------ |
+| `=`      | Equal To                 | `column=value`                  |
+| `!=`     | Not Equal to             | `column!=value`                 |
+| `>`      | Greater Than             | `column>value`                  |
+| `>=`     | Greater Than Or Equal To | `column>value`                  |
+| `<`      | Less Than                | `column>value`                  |
+| `<=`     | Less Than OR Equal To    | `column>value`                  |
+| `=`      | Like (Case-Insenitive)   | `column=*value*`                |
+| `=~`     | Where In                 | `column=~value1,value2,value3`  |
+| `!=~`    | Where Not In             | `column!=~value1,value2,value3` |
