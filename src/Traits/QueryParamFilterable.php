@@ -7,7 +7,7 @@ use Queryable\Scopes\Filter;
 trait QueryParamFilterable
 {
     /**
-     * Boot QueryFaramFilterable
+     * Boot QueryFaramFilterable.
      *
      * @return void
      */

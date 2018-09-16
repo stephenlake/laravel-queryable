@@ -2,9 +2,9 @@
 
 namespace Queryable\Scopes;
 
-use Illuminate\Database\Eloquent\Scope;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Scope;
 
 class Filter implements Scope
 {
@@ -44,8 +44,9 @@ class Filter implements Scope
     /**
      * Apply the scope to a given Eloquent query builder.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $builder
-     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param \Illuminate\Database\Eloquent\Builder $builder
+     * @param \Illuminate\Database\Eloquent\Model   $model
+     *
      * @return void
      */
     public function apply(Builder $builder, Model $model)
@@ -66,8 +67,6 @@ class Filter implements Scope
             $this->parseQueryParamFilterables($builder);
         }
     }
-
-
 
     /**
      * Parse potential query paramters.
@@ -154,7 +153,7 @@ class Filter implements Scope
     {
         if (str_contains($column, '.')) {
             $keys = explode('.', $column);
-            $attribute = $keys[count($keys)-1];
+            $attribute = $keys[count($keys) - 1];
             $relations = str_replace(".{$attribute}", '', implode('.', $keys));
 
             $query->whereHas($relations, function ($query) use ($attribute, $operation, $operator, $value) {
@@ -176,7 +175,7 @@ class Filter implements Scope
     /**
      * Returns true if the parameter is allowed to be filtered against.
      *
-     * @return boolean
+     * @return bool
      */
     private function queryParamFilterAllowed($key)
     {
@@ -184,7 +183,7 @@ class Filter implements Scope
     }
 
     /**
-     * Parses the provided searchables
+     * Parses the provided searchables.
      *
      * @return void
      */
@@ -204,7 +203,7 @@ class Filter implements Scope
     /**
      * Returns true if the query value is a raw SQL query.
      *
-     * @return boolean
+     * @return bool
      */
     private function isQueryParamRaw($value)
     {
@@ -214,7 +213,7 @@ class Filter implements Scope
     /**
      * Returns true if the query column is a relationship.
      *
-     * @return boolean
+     * @return bool
      */
     private function isQueryParamRelationAttribute($value)
     {
@@ -241,7 +240,7 @@ class Filter implements Scope
     private function appendQueryParamRelationAttribute($query, $value, $term)
     {
         $keys = explode('.', $value);
-        $attribute = $keys[count($keys)-1];
+        $attribute = $keys[count($keys) - 1];
         $relations = str_replace(".{$attribute}", '', implode('.', $keys));
 
         $query->orWhereHas($relations, function ($query) use ($attribute, $term) {
