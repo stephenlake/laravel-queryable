@@ -136,9 +136,9 @@ Add a second value of `asc` or `desc` to define the direction of the ordering:
 | `=`      | Equal To                 | `column=value`                  |
 | `!=`     | Not Equal to             | `column!=value`                 |
 | `>`      | Greater Than             | `column>value`                  |
-| `>=`     | Greater Than Or Equal To | `column>value`                  |
-| `<`      | Less Than                | `column>value`                  |
-| `<=`     | Less Than OR Equal To    | `column>value`                  |
+| `>=`     | Greater Than Or Equal To | `column>=value`                 |
+| `<`      | Less Than                | `column<value`                  |
+| `<=`     | Less Than OR Equal To    | `column<=value`                 |
 | `=`      | Like (Case-Insenitive)   | `column=*value*`                |
 | `=~`     | Where In                 | `column=~value1,value2,value3`  |
 | `!=~`    | Where Not In             | `column!=~value1,value2,value3` |
