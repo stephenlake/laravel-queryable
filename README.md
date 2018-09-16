@@ -29,7 +29,7 @@ Install the package via composer.
 
 See documentation for usage.
 
-#### See [extended documentation](https://stephenlake.github.io/laravel-queryable/) for full documentation.
+#### See [documentation](https://stephenlake.github.io/laravel-queryable/) for usage.
 
 ## License
 
