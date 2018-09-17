@@ -159,7 +159,12 @@ class Filter implements Scope
             $keys = explode('.', $column);
             $attribute = $keys[count($keys) - 1];
             $relations = str_replace(".{$attribute}", '', implode('.', $keys));
-            $parentOperation = "{$operation}Has";
+
+            if ($operation == 'orWhere') {
+                $parentOperation = 'orWhereHas';
+            } else {
+                $parentOperation = 'whereHas';
+            }
 
             $query->$parentOperation($relations, function ($subquery) use ($column, $operation, $operator, $value) {
                 if ($operator) {
