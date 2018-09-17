@@ -59,7 +59,7 @@ class Post extends Model
 {
     use QueryParamFilterable;
 
-    public function getQueryable()
+    public function getQueryables()
     {
         return [
           'title',
@@ -102,7 +102,7 @@ This will search for the term `term` in all of your defined queryables. Let's ad
 
 `http://localhost/posts?search=Test&filters=on&title!=Test&body=*foobar*&created_at>=2018`
 
-This results in returning results where we first search all queryables for the search term `Test` then:
+This returns results where we first search all queryables for the search term `Test` then:
 
 Filter where `title` not equal (`!=`) to `Test`
 
