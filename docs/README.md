@@ -64,7 +64,7 @@ class Post extends Model
         return [
           'title',
           'body',
-          created_at
+          'created_at'
         ];
     }
 }
