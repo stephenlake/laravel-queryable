@@ -74,11 +74,11 @@ class Post extends Model
 
 The Queryable configuration file lives alongside all other Laravel configuration files as `config/queryable.php`. If you do not see this file, ensure you have followed the quickstart guide correctly and run through all steps as instructed.
 
-| Config Key      |  Default | Description                                                                                                        |
-| --------------- | :------: | :----------------------------------------------------------------------------------------------------------------- |
-| searchKeyName   | `search` | The key query parameter name you wish to use the in the query parameters to trigger the search filtration process. |
-| filterKeyName   | `filters`| The key query parameter name you wish to use the in the query parameters to trigger the filtering process          |
-| defaultOrdering |   `asc`  | The default orderBy direction when the orderBy query attribute has been defined without a direction.               |
+| Config Key      |  Default  | Description                                                                                                        |
+| --------------- | :-------: | :----------------------------------------------------------------------------------------------------------------- |
+| searchKeyName   |  `search` | The key query parameter name you wish to use the in the query parameters to trigger the search filtration process. |
+| filterKeyName   | `filters` | The key query parameter name you wish to use the in the query parameters to trigger the filtering process          |
+| defaultOrdering |   `asc`   | The default orderBy direction when the orderBy query attribute has been defined without a direction.               |
 
 # Usage
 
@@ -142,3 +142,9 @@ Add a second value of `asc` or `desc` to define the direction of the ordering:
 | `=`      | Like (Case-Insenitive)   | `column=*value*`                |
 | `=~`     | Where In                 | `column=~value1,value2,value3`  |
 | `!=~`    | Where Not In             | `column!=~value1,value2,value3` |
+
+# Roadmap
+
+-   Add search documentation
+-   Filter on appendages
+-   Filter on collections 
