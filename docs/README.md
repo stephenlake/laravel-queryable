@@ -77,7 +77,7 @@ The Queryable configuration file lives alongside all other Laravel configuration
 | Config Key      |  Default | Description                                                                                                        |
 | --------------- | :------: | :----------------------------------------------------------------------------------------------------------------- |
 | searchKeyName   | `search` | The key query parameter name you wish to use the in the query parameters to trigger the search filtration process. |
-| filterKeyName   | `filter` | The key query parameter name you wish to use the in the query parameters to trigger the filtering process          |
+| filterKeyName   | `filters`| The key query parameter name you wish to use the in the query parameters to trigger the filtering process          |
 | defaultOrdering |   `asc`  | The default orderBy direction when the orderBy query attribute has been defined without a direction.               |
 
 # Usage
@@ -112,10 +112,10 @@ Filter where `created_at` is greater than or equal (`>=`) to `2018`
 
 ## Filtering on Relationships
 
-Filtering through relationships is as simple as prefixing the relationship tree with period (`.`):
+Filtering through relationships is as simple as delimiting the relationship tree with arrows (`->`):
 
 Example:
-`http://localhost?filters=on&threads.comments.title=*foobar*`
+`http://localhost?filters=on&threads->comments->title=*foobar*`
 
 **Note:** The `getQueryables` array would need to return the `threads.comments.title` as a queryable attribute in order for this to work.
 
