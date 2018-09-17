@@ -22,7 +22,7 @@ return [
     */
 
     'searchKeyName' => 'search',
-    'filterKeyName' => 'filter',
+    'filterKeyName' => 'filters',
 
     /*
     |--------------------------------------------------------------------------
