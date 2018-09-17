@@ -16,13 +16,6 @@ class Filter implements Scope
     private $queryableConfig;
 
     /**
-     * Queryable regex operator pattern.
-     *
-     * @var string
-     */
-    private $queryableOperatorPattern = '/([!=|<=|<|>=|>|=|!=~|=~])/m';
-
-    /**
      * Queryable attributes.
      *
      * @var array
@@ -63,7 +56,7 @@ class Filter implements Scope
             $this->parseQueryParamSearchables($builder, $term);
         }
 
-        if (request($this->queryableConfig['filterKeyName'] ?? 'filter', false)) {
+        if (request($this->queryableConfig['filterKeyName'] ?? 'filter', false) == 'on') {
             $this->parseQueryParamFilterables($builder);
         }
     }
@@ -75,17 +68,38 @@ class Filter implements Scope
      */
     private function parseQueryParamFilterables($query)
     {
-        $filters = explode('&', urldecode(request()->getQueryString()));
+        $filters = explode('&', str_replace('->', '.', urldecode(request()->getQueryString())));
 
         foreach ($filters as $rawFilter) {
-            $filter = preg_split($this->queryableOperatorPattern, $rawFilter, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+            if (str_contains($rawFilter, '!=~')) {
+                $operator = '!=~';
+            } elseif (str_contains($rawFilter, '=~')) {
+                $operator = '=~';
+            } elseif (str_contains($rawFilter, '>=')) {
+                $operator = '>=';
+            } elseif (str_contains($rawFilter, '<=')) {
+                $operator = '<=';
+            } elseif (str_contains($rawFilter, '!=')) {
+                $operator = '!=';
+            } elseif (str_contains($rawFilter, '=')) {
+                $operator = '=';
+            } elseif (str_contains($rawFilter, '>')) {
+                $operator = '>';
+            } elseif (str_contains($rawFilter, '<')) {
+                $operator = '<';
+            } else {
+                break;
+            }
 
-            $filterParamCount = count($filter);
+            $params = explode($operator, $rawFilter);
 
-            if ($filterParamCount >= 3 && $this->queryParamFilterAllowed($filter[0])) {
-                $query->where(function ($query) use ($filter, $filterParamCount) {
-                    $this->parseFilter($query, $filter, $filterParamCount);
-                });
+            if (count($params) == 2) {
+                $column = $params[0];
+                $values = $params[1];
+
+                if (in_array($column, $this->queryables)) {
+                    $this->parseFilter($query, $column, $operator, $values);
+                }
             }
         }
 
@@ -100,21 +114,8 @@ class Filter implements Scope
      *
      * @return void
      */
-    private function parseFilter($query, $filter, $filterParamCount)
+    private function parseFilter($query, $column, $operator, $value)
     {
-        $column = $filter[0];
-
-        if ($filterParamCount == 4) {
-            $operator = "{$filter[1]}{$filter[2]}";
-            $value = $filter[3];
-        } elseif ($filterParamCount == 5) {
-            $operator = "{$filter[1]}{$filter[2]}{$filter[3]}";
-            $value = $filter[4];
-        } elseif ($filterParamCount == 3) {
-            $operator = $filter[1];
-            $value = $filter[2];
-        }
-
         $value = $value == 'NULL' ? null : $value;
 
         switch ($operator) {
@@ -125,7 +126,7 @@ class Filter implements Scope
           case '>=':
           case '<=':
               if (ends_with($value, '*') || starts_with($value, '*')) {
-                  $operator = 'like';
+                  $operator = 'ilike';
                   $value = str_replace('*', '%', $value);
               }
               $this->queryParamFilterQueryConstruct($query, $column, $value, 'where', $operator);
@@ -141,6 +142,9 @@ class Filter implements Scope
               $this->queryParamFilterQueryConstruct($query, $column, $value, 'whereIn');
               break;
 
+          case '||=':
+              $this->queryParamFilterQueryConstruct($query, $column, $value, 'orWhere', 'ilike');
+              break;
         }
     }
 
@@ -155,12 +159,13 @@ class Filter implements Scope
             $keys = explode('.', $column);
             $attribute = $keys[count($keys) - 1];
             $relations = str_replace(".{$attribute}", '', implode('.', $keys));
+            $parentOperation = "{$operation}Has";
 
-            $query->whereHas($relations, function ($query) use ($attribute, $operation, $operator, $value) {
+            $query->$parentOperation($relations, function ($subquery) use ($column, $operation, $operator, $value) {
                 if ($operator) {
-                    $query->$operation($attribute, $operator, $value);
+                    $subquery->$operation($column, $operator, $value);
                 } else {
-                    $query->$operation($attribute, $value);
+                    $subquery->$operation($column, $value);
                 }
             });
         } else {
@@ -173,90 +178,18 @@ class Filter implements Scope
     }
 
     /**
-     * Returns true if the parameter is allowed to be filtered against.
-     *
-     * @return bool
-     */
-    private function queryParamFilterAllowed($key)
-    {
-        return in_array($key, $this->queryables);
-    }
-
-    /**
      * Parses the provided searchables.
      *
      * @return void
      */
     private function parseQueryParamSearchables($query, $term)
     {
-        foreach ($this->queryables as $queryable => $value) {
-            if ($this->isQueryParamRaw($value)) {
-                $this->appendQueryParamRaw($query, $value, $term);
-            } elseif ($this->isQueryParamRelationAttribute($value)) {
-                $this->appendQueryParamRelationAttribute($query, $value, $term);
-            } else {
-                $this->appendQueryParamComparison($query, $value, $term);
-            }
+        if (count($this->queryables)) {
+            $query->where(function ($subquery) use ($term) {
+                foreach ($this->queryables as $queryable => $value) {
+                    $this->queryParamFilterQueryConstruct($subquery, $value, "%{$term}%", 'orWhere', 'ilike');
+                }
+            });
         }
-    }
-
-    /**
-     * Returns true if the query value is a raw SQL query.
-     *
-     * @return bool
-     */
-    private function isQueryParamRaw($value)
-    {
-        return starts_with($value, 'raw::');
-    }
-
-    /**
-     * Returns true if the query column is a relationship.
-     *
-     * @return bool
-     */
-    private function isQueryParamRelationAttribute($value)
-    {
-        return str_contains($value, '.');
-    }
-
-    /**
-     * Append queries to quiery builder.
-     *
-     * @return void
-     */
-    private function appendQueryParamRaw($query, $value, $term)
-    {
-        $raw = substr($value, 5);
-
-        $query->orWhere(DB::raw($raw), 'ilike', "%{$term}%");
-    }
-
-    /**
-     * Append queries to quiery builder.
-     *
-     * @return void
-     */
-    private function appendQueryParamRelationAttribute($query, $value, $term)
-    {
-        $keys = explode('.', $value);
-        $attribute = $keys[count($keys) - 1];
-        $relations = str_replace(".{$attribute}", '', implode('.', $keys));
-
-        $query->orWhereHas($relations, function ($query) use ($attribute, $term) {
-            $this->appendQueryParamComparison($query, $attribute, $term);
-        });
-    }
-
-    /**
-     * Append queries to quiery builder.
-     *
-     * @return void
-     */
-    private function appendQueryParamComparison($query, $value, $term)
-    {
-        $term = str_replace('*', '%', $term);
-
-        $query->orWhere($value, 'ilike', $term);
     }
 }
