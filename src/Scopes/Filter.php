@@ -57,7 +57,7 @@ class Filter implements Scope
         }
 
         if (count($this->queryables)) {
-            if (request($this->queryableConfig['filterKeyName'] ?? 'filter', false) == 'on') {
+            if (request($this->queryableConfig['filterKeyName'] ?? 'filters', false) == 'on') {
                 $this->parseQueryParamFilterables($builder);
             }
         }
@@ -97,13 +97,13 @@ class Filter implements Scope
 
             if (count($params) == 2) {
                 $column = $params[0];
+                $values = $params[1];
+
+                if ($isOr = starts_with($column, '!')) {
+                    $column = substr($column, 1);
+                }
 
                 if (in_array($column, $this->queryables)) {
-                    $values = $params[1];
-
-                    if ($isOr = starts_with($column, '!')) {
-                        $column = substr($column, 1);
-                    }
                     $this->parseFilter($query, $column, $operator, $values, $isOr);
                 }
             }
@@ -169,18 +169,19 @@ class Filter implements Scope
             }
 
             $query->$parentOperation($relations, function ($subquery) use ($column, $operation, $operator, $value) {
-                if ($operator) {
-                    $subquery->$operation($column, $operator, $value);
-                } else {
-                    $subquery->$operation($column, $value);
-                }
+                $this->appendQuery($subquery, $operation, $column, $operator, $value);
             });
         } else {
-            if ($operator) {
-                $query->$operation($column, $operator, $value);
-            } else {
-                $query->$operation($column, $value);
-            }
+            $this->appendQuery($query, $operation, $column, $operator, $value);
+        }
+    }
+
+    private function appendQuery($query, $operation, $column, $operator, $value)
+    {
+        if ($operator) {
+            $query->$operation($column, $operator, $value);
+        } else {
+            $query->$operation($column, $value);
         }
     }
 }
