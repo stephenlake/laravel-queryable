@@ -101,8 +101,8 @@ class Filter implements Scope
                 if (in_array($column, $this->queryables)) {
                     $values = $params[1];
 
-                    if ($isOr = starts_with($values, '!')) {
-                        $values = substr($values, 1);
+                    if ($isOr = starts_with($column, '!')) {
+                        $column = substr($column, 1);
                     }
                     $this->parseFilter($query, $column, $operator, $values, $isOr);
                 }
