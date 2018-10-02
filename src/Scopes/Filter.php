@@ -23,6 +23,13 @@ class Filter implements Scope
     private $queryables;
 
     /**
+     * Database driver name
+     *
+     * @var string
+     */
+    private $databaseDriver;
+
+    /**
      * Construct!
      *
      * @return void
@@ -46,6 +53,7 @@ class Filter implements Scope
     {
         if (method_exists($model, 'getQueryables')) {
             $this->queryables = $model->getQueryables();
+            $this->databaseDriver = $model->getConnection()->getDriverName();
         }
 
         if (count($this->queryables)) {
@@ -124,7 +132,7 @@ class Filter implements Scope
           case '>=':
           case '<=':
               if (ends_with($value, '*') || starts_with($value, '*')) {
-                  $operator = 'ilike';
+                  $operator =  $this->databaseDriver == 'pgsql' ? 'ilike' : 'like';
                   $value = str_replace('*', '%', $value);
               }
               $this->queryParamFilterQueryConstruct($query, $column, $value, $isOr ? 'orWhere' : 'where', $operator);
