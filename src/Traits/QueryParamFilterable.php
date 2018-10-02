@@ -17,10 +17,10 @@ trait QueryParamFilterable
      */
     private $databaseDriver;
 
-    public function scopeWithFilters($query, ...$filterable)
+    public function scopeWithFilters($query, $filterable)
     {
         $this->databaseDriver = $this->getConnection()->getDriverName();
-        $this->queryables = is_array($filterable) ? $filterable : $filterable;
+        $this->queryables = $filterable;
 
         if (count($this->queryables)) {
             $this->parseQueryParamFilterables($query);
