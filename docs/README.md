@@ -20,14 +20,6 @@ Register the service provider in `config/app.php` (Not required in Laravel 5.7+)
 
     Queryable\QueryableServiceProvider:class
 
-## Publish Configuration
-
-Publish the configuration file accordingly
-
-    php artisan vendor:publish --provider="Queryable\QueryableServiceProvider"
-
-Run through the documenation and modify according to your needs.
-
 ## Add QueryParamFilterable Trait
 
 Add the `Queryable\Traits\QueryParamFilterable` trait to your model(s) you wish to be filterable.
@@ -49,15 +41,6 @@ Define which fields are allowed to be filtered on query:
 Post::withFilters('title', 'body', 'created_at')->get();
 ```
 
-# Configuration
-
-The Queryable configuration file lives alongside all other Laravel configuration files as `config/queryable.php`. If you do not see this file, ensure you have followed the quickstart guide correctly and run through all steps as instructed.
-
-| Config Key      |  Default  | Description                                                                                                        |
-| --------------- | :-------: | :----------------------------------------------------------------------------------------------------------------- |
-| filterKeyName   | `filters` | The key query parameter name you wish to use the in the query parameters to trigger the filtering process          |
-| defaultOrdering |   `asc`   | The default orderBy direction when the orderBy query attribute has been defined without a direction.               |
-
 # Usage
 
 ## Quick Sample
@@ -72,7 +55,7 @@ Route::get('/posts', function() {
 });
 ```
 
-Now using the values you've chosen in your configuration file (we will stick to default going forward), append some query params to your URL:
+Now using the values you've chosen in your filters, append some query params to your URL:
 
 `http://localhost/posts?title=*Test*&!body=*sample*`
 

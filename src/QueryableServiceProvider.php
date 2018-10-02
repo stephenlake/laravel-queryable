@@ -13,8 +13,6 @@ class QueryableServiceProvider extends LaravelServiceProvider
      */
     public function boot()
     {
-        $this->publishes([
-            __DIR__.'/Config/queryable.php' => config_path('queryable.php'),
-        ]);
+        //
     }
 }
