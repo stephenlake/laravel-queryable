@@ -75,7 +75,7 @@ trait QueryParamFilterable
 
         if ($orderBy = request()->query('orderBy', false)) {
             $value = explode(',', $orderBy);
-            $query->orderBy($value[0], $value[1] ?? ($this->queryableConfig['defaultOrdering'] ?? 'asc'));
+            $query->orderBy($value[0], $value[1] ?? 'asc');
         }
     }
 
