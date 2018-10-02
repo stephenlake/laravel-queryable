@@ -44,16 +44,14 @@ class Filter implements Scope
      */
     public function apply(Builder $builder, Model $model)
     {
-        if (!method_exists($model, 'getQueryables')) {
-            $class = get_class($model);
-
-            throw new \Exception("The required 'getQueryables' function is not defined on the '{$class}' model.");
+        if (method_exists($model, 'getQueryables')) {
+            $this->queryables = $model->getQueryables();
         }
 
-        $this->queryables = $model->getQueryables();
-
-        if (request($this->queryableConfig['filterKeyName'] ?? 'filter', false) == 'on') {
-            $this->parseQueryParamFilterables($builder);
+        if (count($this->queryables)) {
+            if (request($this->queryableConfig['filterKeyName'] ?? 'filter', false) == 'on') {
+                $this->parseQueryParamFilterables($builder);
+            }
         }
     }
 
@@ -91,10 +89,14 @@ class Filter implements Scope
 
             if (count($params) == 2) {
                 $column = $params[0];
-                $values = $params[1];
 
                 if (in_array($column, $this->queryables)) {
-                    $this->parseFilter($query, $column, $operator, $values);
+                    $values = $params[1];
+
+                    if ($isOr = starts_with($values, '!')) {
+                        $values = substr($values, 1);
+                    }
+                    $this->parseFilter($query, $column, $operator, $values, $isOr);
                 }
             }
         }
@@ -110,7 +112,7 @@ class Filter implements Scope
      *
      * @return void
      */
-    private function parseFilter($query, $column, $operator, $value)
+    private function parseFilter($query, $column, $operator, $value, $isOr = false)
     {
         $value = $value == 'NULL' ? null : $value;
 
@@ -125,21 +127,17 @@ class Filter implements Scope
                   $operator = 'ilike';
                   $value = str_replace('*', '%', $value);
               }
-              $this->queryParamFilterQueryConstruct($query, $column, $value, 'where', $operator);
+              $this->queryParamFilterQueryConstruct($query, $column, $value, $isOr ? 'orWhere' : 'where', $operator);
               break;
 
           case '!=~':
               $value = explode(',', $value);
-              $this->queryParamFilterQueryConstruct($query, $column, $value, 'whereNotIn');
+              $this->queryParamFilterQueryConstruct($query, $column, $value, $isOr ? 'orWhereNotIn' : 'whereNotIn');
               break;
 
           case '=~':
               $value = explode(',', $value);
-              $this->queryParamFilterQueryConstruct($query, $column, $value, 'whereIn');
-              break;
-
-          case '||=':
-              $this->queryParamFilterQueryConstruct($query, $column, $value, 'orWhere', 'ilike');
+              $this->queryParamFilterQueryConstruct($query, $column, $value, $isOr ? 'orWhereIn' : 'whereIn');
               break;
         }
     }
