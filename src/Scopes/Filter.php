@@ -52,10 +52,6 @@ class Filter implements Scope
 
         $this->queryables = $model->getQueryables();
 
-        if ($term = request($this->queryableConfig['searchKeyName'] ?? 'search', false)) {
-            $this->parseQueryParamSearchables($builder, $term);
-        }
-
         if (request($this->queryableConfig['filterKeyName'] ?? 'filter', false) == 'on') {
             $this->parseQueryParamFilterables($builder);
         }
@@ -179,22 +175,6 @@ class Filter implements Scope
             } else {
                 $query->$operation($column, $value);
             }
-        }
-    }
-
-    /**
-     * Parses the provided searchables.
-     *
-     * @return void
-     */
-    private function parseQueryParamSearchables($query, $term)
-    {
-        if (count($this->queryables)) {
-            $query->where(function ($subquery) use ($term) {
-                foreach ($this->queryables as $queryable => $value) {
-                    $this->queryParamFilterQueryConstruct($subquery, $value, "%{$term}%", 'orWhere', 'ilike');
-                }
-            });
         }
     }
 }
