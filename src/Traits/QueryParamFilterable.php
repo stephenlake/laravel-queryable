@@ -4,13 +4,6 @@ namespace Queryable\Traits;
 trait QueryParamFilterable
 {
     /**
-     * Queryable configuration.
-     *
-     * @var array
-     */
-    private $queryableConfig;
-
-    /**
      * Queryable attributes.
      *
      * @var array
@@ -26,14 +19,11 @@ trait QueryParamFilterable
 
     public function scopeWithFilters($query, ...$filterable)
     {
-        $this->queryableConfig = config('queryable');
         $this->databaseDriver = $this->getConnection()->getDriverName();
         $this->queryables = is_array($filterable) ? $filterable : $filterable;
 
         if (count($this->queryables)) {
-            if (request($this->queryableConfig['filterKeyName'] ?? 'filters', false) == 'on') {
-                $this->parseQueryParamFilterables($query);
-            }
+            $this->parseQueryParamFilterables($query);
         }
     }
 
