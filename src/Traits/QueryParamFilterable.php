@@ -1,12 +1,7 @@
 <?php
+namespace Queryable\Traits;
 
-namespace Queryable\Scopes;
-
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Scope;
-
-class Filter implements Scope
+trait QueryParamFilterable
 {
     /**
      * Queryable configuration.
@@ -20,7 +15,7 @@ class Filter implements Scope
      *
      * @var array
      */
-    private $queryables;
+    private $queryables = [];
 
     /**
      * Database driver name
@@ -29,36 +24,15 @@ class Filter implements Scope
      */
     private $databaseDriver;
 
-    /**
-     * Construct!
-     *
-     * @return void
-     */
-    public function __construct()
+    public function scopeWithFilters($query, ...$filterable)
     {
-        if (!$this->queryableConfig) {
-            $this->queryableConfig = config('queryable');
-        }
-    }
-
-    /**
-     * Apply the scope to a given Eloquent query builder.
-     *
-     * @param \Illuminate\Database\Eloquent\Builder $builder
-     * @param \Illuminate\Database\Eloquent\Model   $model
-     *
-     * @return void
-     */
-    public function apply(Builder $builder, Model $model)
-    {
-        if (method_exists($model, 'getQueryables')) {
-            $this->queryables = $model->getQueryables();
-            $this->databaseDriver = $model->getConnection()->getDriverName();
-        }
+        $this->queryableConfig = config('queryable');
+        $this->databaseDriver = $this->getConnection()->getDriverName();
+        $this->queryables = is_array($filterable) ? $filterable : $filterable;
 
         if (count($this->queryables)) {
             if (request($this->queryableConfig['filterKeyName'] ?? 'filters', false) == 'on') {
-                $this->parseQueryParamFilterables($builder);
+                $this->parseQueryParamFilterables($query);
             }
         }
     }
