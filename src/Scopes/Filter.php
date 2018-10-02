@@ -47,10 +47,10 @@ class Filter implements Scope
         if (!method_exists($model, 'getQueryables')) {
             $class = get_class($model);
 
-            throw new \Exception("The required 'getQueryables' function is not defined on the '{$class}' model. Read the docs at https://stephenlake.github.io/laravel-queryables");
+            throw new \Exception("The required 'getQueryables' function is not defined on the '{$class}' model.");
         }
 
-        $this->queryables = array_merge($model->getQueryables());
+        $this->queryables = $model->getQueryables();
 
         if ($term = request($this->queryableConfig['searchKeyName'] ?? 'search', false)) {
             $this->parseQueryParamSearchables($builder, $term);
