@@ -6,13 +6,6 @@
     HTTP query parameter based model searching and filtering for Laravel Models.
 </h6>
 
-<p align="center">
-<a href="https://travis-ci.org/stephenlake/laravel-queryable"><img src="https://img.shields.io/travis/stephenlake/laravel-queryable/master.svg?style=flat-square" alt="Build Status"></a>
-<a href="https://github.styleci.io/repos/149042065"><img src="https://github.styleci.io/repos/148940371/shield?branch=master&style=flat-square" alt="StyleCI"></a>
-<a href="https://github.com/stephenlake/laravel-queryable"><img src="https://img.shields.io/github/release/stephenlake/laravel-queryable.svg?style=flat-square" alt="Release"></a>
-<a href="https://github.com/stephenlake/laravel-queryable/LICENSE.md"><img src="https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square" alt="License"></a>
-</p>
-
 # Getting Started
 
 ## Install via Composer
@@ -50,24 +43,10 @@ class Post extends Model
 
 ## Define Queryable Fields
 
-Define which fields are allowed to be filtered.
+Define which fields are allowed to be filtered on query:
 
 ```php
-use Queryable\Traits\QueryParamFilterable;
-
-class Post extends Model
-{
-    use QueryParamFilterable;
-
-    public function getQueryables()
-    {
-        return [
-          'title',
-          'body',
-          'created_at'
-        ];
-    }
-}
+Post::withFilters('title', 'body', 'created_at')->get();
 ```
 
 # Configuration
@@ -76,7 +55,6 @@ The Queryable configuration file lives alongside all other Laravel configuration
 
 | Config Key      |  Default  | Description                                                                                                        |
 | --------------- | :-------: | :----------------------------------------------------------------------------------------------------------------- |
-| searchKeyName   |  `search` | The key query parameter name you wish to use the in the query parameters to trigger the search filtration process. |
 | filterKeyName   | `filters` | The key query parameter name you wish to use the in the query parameters to trigger the filtering process          |
 | defaultOrdering |   `asc`   | The default orderBy direction when the orderBy query attribute has been defined without a direction.               |
 
@@ -90,19 +68,17 @@ Sample Route:
 
 ```php
 Route::get('/posts', function() {
-  return \App\Post::get();
+  return \App\Post::withFilters('title', 'body')->get();
 });
 ```
 
 Now using the values you've chosen in your configuration file (we will stick to default going forward), append some query params to your URL:
 
-`http://localhost/posts?search=Test`
+`http://localhost/posts?title=*Test*&!body=*sample*`
 
-This will search for the term `term` in all of your defined queryables. Let's add some filters:
+This will search for all records where the title contains **Test** OR the body contains **sample**.
 
-`http://localhost/posts?search=Test&filters=on&title!=Test&body=*foobar*&created_at>=2018`
-
-This returns results where we first search all queryables for the search term `Test` then:
+`http://localhost/posts?title!=Test&body=*foobar*&created_at>=2018`
 
 Filter where `title` not equal (`!=`) to `Test`
 
@@ -115,7 +91,7 @@ Filter where `created_at` is greater than or equal (`>=`) to `2018`
 Filtering through relationships is as simple as delimiting the relationship tree with arrows (`->`):
 
 Example:
-`http://localhost?filters=on&threads->comments->title=*foobar*`
+`http://localhost?threads->comments->title=*foobar*`
 
 **Note:** The `getQueryables` array would need to return the `threads.comments.title` as a queryable attribute in order for this to work.
 
@@ -145,6 +121,6 @@ Add a second value of `asc` or `desc` to define the direction of the ordering:
 
 # Roadmap
 
--   Add search documentation
+-   Add orWhere documentation
 -   Filter on appendages
--   Filter on collections 
+-   Filter on collections
