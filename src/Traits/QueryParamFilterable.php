@@ -99,7 +99,11 @@ trait QueryParamFilterable
           case '>=':
           case '<=':
               if (ends_with($value, '*') || starts_with($value, '*')) {
-                  $operator = $this->databaseDriver == 'pgsql' ? 'ilike' : 'like';
+                  if (starts_with($operator, '!')) {
+                      $operator =  $this->databaseDriver == 'pgsql' ? 'NOT ILIKE' : 'NOT LIKE';
+                  } else {
+                      $operator =  $this->databaseDriver == 'pgsql' ? 'ILIKE' : 'LIKE';
+                  }
                   $value = str_replace('*', '%', $value);
               }
               $this->queryParamFilterQueryConstruct($query, $column, $value, $isOr ? 'orWhere' : 'where', $operator);
