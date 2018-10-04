@@ -12,20 +12,22 @@ trait QueryParamFilterable
     private $queryables = [];
 
     /**
-     * Database driver name
+     * Database driver name.
      *
      * @var string
      */
     private $databaseDriver;
 
-    public function scopeWithFilters($query, $filterable)
+    public function scopeWithFilters($query, $filterable, $filters = null)
     {
         $this->databaseDriver = $this->getConnection()->getDriverName();
         $this->queryables = $filterable;
 
         if (count($this->queryables)) {
-            $this->parseQueryParamFilterables($query);
+            return $this->parseQueryParamFilterables($query, $filters);
         }
+
+        return $query;
     }
 
     /**
@@ -33,9 +35,9 @@ trait QueryParamFilterable
      *
      * @return void
      */
-    private function parseQueryParamFilterables($query)
+    private function parseQueryParamFilterables($query, $filters = null)
     {
-        $filters = explode('&', str_replace('->', '.', urldecode(request()->getQueryString())));
+        $filters = $filters ?? explode('&', str_replace('->', '.', urldecode(request()->getQueryString())));
 
         foreach ($filters as $rawFilter) {
             if (str_contains($rawFilter, '!=~')) {
@@ -137,20 +139,22 @@ trait QueryParamFilterable
                 $parentOperation = 'whereHas';
             }
 
+            $column = $attribute;
+
             $query->$parentOperation($relations, function ($subquery) use ($column, $operation, $operator, $value) {
-                $this->appendQuery($subquery, $operation, $column, $operator, $value);
+                return $this->appendQuery($subquery, $operation, $column, $operator, $value);
             });
         } else {
-            $this->appendQuery($query, $operation, $column, $operator, $value);
+            return $this->appendQuery($query, $operation, $column, $operator, $value);
         }
     }
 
     private function appendQuery($query, $operation, $column, $operator, $value)
     {
         if ($operator) {
-            $query->$operation($column, $operator, $value);
+            return $query->whereRaw("LOWER($column) $operator ?", [strtolower($value)]);
         } else {
-            $query->$operation($column, $value);
+            return $query->whereRaw("LOWER($column) = ?", [strtolower($value)]);
         }
     }
 }
