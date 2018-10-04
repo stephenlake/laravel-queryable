@@ -100,9 +100,9 @@ trait QueryParamFilterable
           case '<=':
               if (ends_with($value, '*') || starts_with($value, '*')) {
                   if (starts_with($operator, '!')) {
-                      $operator =  $this->databaseDriver == 'pgsql' ? 'NOT ILIKE' : 'NOT LIKE';
+                      $operator = $this->databaseDriver == 'pgsql' ? 'NOT ILIKE' : 'NOT LIKE';
                   } else {
-                      $operator =  $this->databaseDriver == 'pgsql' ? 'ILIKE' : 'LIKE';
+                      $operator = $this->databaseDriver == 'pgsql' ? 'ILIKE' : 'LIKE';
                   }
                   $value = str_replace('*', '%', $value);
               }
