@@ -1,4 +1,5 @@
 <?php
+
 namespace Queryable\Traits;
 
 trait QueryParamFilterable
@@ -11,7 +12,7 @@ trait QueryParamFilterable
     private $queryables = [];
 
     /**
-     * Database driver name
+     * Database driver name.
      *
      * @var string
      */
@@ -98,7 +99,7 @@ trait QueryParamFilterable
           case '>=':
           case '<=':
               if (ends_with($value, '*') || starts_with($value, '*')) {
-                  $operator =  $this->databaseDriver == 'pgsql' ? 'ilike' : 'like';
+                  $operator = $this->databaseDriver == 'pgsql' ? 'ilike' : 'like';
                   $value = str_replace('*', '%', $value);
               }
               $this->queryParamFilterQueryConstruct($query, $column, $value, $isOr ? 'orWhere' : 'where', $operator);

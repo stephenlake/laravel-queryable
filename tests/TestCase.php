@@ -55,15 +55,15 @@ abstract class TestCase extends BaseTestCase
         for ($i = 0; $i < 300; $i++) {
             User::create([
               'firstname' => $this->faker->firstname,
-              'lastname' => $this->faker->lastname,
+              'lastname'  => $this->faker->lastname,
             ]);
         }
 
         for ($i = 0; $i < 50; $i++) {
             Group::create([
-              'name' => $this->faker->company,
+              'name'        => $this->faker->company,
               'description' => $this->faker->bs,
-              'creator_id' => User::inRandomOrder()->first()->id
+              'creator_id'  => User::inRandomOrder()->first()->id,
             ]);
         }
 
