@@ -2,9 +2,9 @@
 
 namespace Queryable\Tests\Unit;
 
-use Queryable\Tests\TestCase;
 use Queryable\Tests\Models\Group;
 use Queryable\Tests\Models\User;
+use Queryable\Tests\TestCase;
 
 class MainTest extends TestCase
 {
@@ -18,7 +18,7 @@ class MainTest extends TestCase
 
         $filters = [
           "name=*{$wordFromGroupName}*",
-          "description=*{$wordFromGroupDescription}*"
+          "description=*{$wordFromGroupDescription}*",
         ];
 
         $groups = Group::withFilters(['name', 'description'], $filters)->get();
@@ -41,7 +41,7 @@ class MainTest extends TestCase
 
         $filters = [
           "name=*{$wordFromGroupName}*",
-          "description=*{$wordFromGroupDescription}*"
+          "description=*{$wordFromGroupDescription}*",
         ];
 
         $groups = Group::withFilters(['name', 'description'], $filters)->get();
@@ -63,7 +63,7 @@ class MainTest extends TestCase
 
         $filters = [
           "group.name=*{$wordFromGroupName}*",
-          "group.creator_id!=0"
+          'group.creator_id!=0',
         ];
 
         $users = User::with('group')->withFilters(['group.name', 'group.creator_id'], $filters)->get();
