@@ -18,14 +18,23 @@ trait QueryParamFilterable
      */
     private $databaseDriver;
 
+    /**
+     * Debugging.
+     *
+     * @var boolean
+     */
+    private $debugging;
+
     public function scopeWithFilters($query, $filterable, $filters = null)
     {
         $this->databaseDriver = $this->getConnection()->getDriverName();
         $this->queryables = $filterable;
 
         if (count($this->queryables)) {
-            return $this->parseQueryParamFilterables($query, $filters);
+            $this->parseQueryParamFilterables($query, $filters);
         }
+
+        $this->debug($query->toSql());
 
         return $query;
     }
@@ -38,7 +47,14 @@ trait QueryParamFilterable
     private function parseQueryParamFilterables($query, $filters = null)
     {
         $filters = $filters ?? explode('&', str_replace('->', '.', urldecode(request()->getQueryString())));
-        $filters = collect($filters)->sortKeysDesc()->all();
+
+        if (count($filters) > 1) {
+            if (starts_with($filters[0], '!')) {
+                $filters[0] = substr($filters[0], 1);
+            }
+        }
+
+        $this->debug(print_r($filters, true), false);
 
         foreach ($filters as $rawFilter) {
             if (str_contains($rawFilter, '!=~')) {
@@ -90,6 +106,8 @@ trait QueryParamFilterable
      */
     private function parseFilter($query, $column, $operator, $value, $isOr = false)
     {
+        $this->debug(print_r(compact('column', 'operator', 'value', 'isOr'), true));
+
         $value = $value == 'NULL' ? null : $value;
 
         switch ($operator) {
@@ -152,10 +170,23 @@ trait QueryParamFilterable
 
     private function appendQuery($query, $operation, $column, $operator, $value)
     {
-        if ($operator) {
-            return $query->whereRaw("LOWER($column) $operator ?", [strtolower($value)]);
-        } else {
-            return $query->whereRaw("LOWER($column) = ?", [strtolower($value)]);
+        $operation = "{$operation}Raw";
+
+        if (!$operator) {
+            $operator = '=';
+        }
+
+        return $query->$operation("LOWER($column) $operator ?", [strtolower($value)]);
+    }
+
+    private function debug($output, $append = true)
+    {
+        if ($this->debugging === true) {
+            if ($append) {
+                file_put_contents(base_path('queryables.txt'), $output . PHP_EOL . PHP_EOL, FILE_APPEND);
+            } else {
+                file_put_contents(base_path('queryables.txt'), $output);
+            }
         }
     }
 }
