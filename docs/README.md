@@ -14,12 +14,6 @@ Install the package via composer.
 
     composer require stephenlake/laravel-queryable
 
-## Register Service Provider
-
-Register the service provider in `config/app.php` (Not required in Laravel 5.7+)
-
-    Queryable\QueryableServiceProvider:class
-
 ## Add QueryParamFilterable Trait
 
 Add the `Queryable\Traits\QueryParamFilterable` trait to your model(s) you wish to be filterable.
