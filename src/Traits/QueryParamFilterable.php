@@ -38,6 +38,7 @@ trait QueryParamFilterable
     private function parseQueryParamFilterables($query, $filters = null)
     {
         $filters = $filters ?? explode('&', str_replace('->', '.', urldecode(request()->getQueryString())));
+        $filters = collect($filters)->sortKeysDesc()->all();
 
         foreach ($filters as $rawFilter) {
             if (str_contains($rawFilter, '!=~')) {
