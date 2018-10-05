@@ -21,7 +21,7 @@ trait QueryParamFilterable
     /**
      * Debugging.
      *
-     * @var boolean
+     * @var bool
      */
     private $debugging;
 
@@ -183,7 +183,7 @@ trait QueryParamFilterable
     {
         if ($this->debugging === true) {
             if ($append) {
-                file_put_contents(base_path('queryables.txt'), $output . PHP_EOL . PHP_EOL, FILE_APPEND);
+                file_put_contents(base_path('queryables.txt'), $output.PHP_EOL.PHP_EOL, FILE_APPEND);
             } else {
                 file_put_contents(base_path('queryables.txt'), $output);
             }
