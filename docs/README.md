@@ -53,7 +53,7 @@ Now using the values you've chosen in your filters, append some query params to 
 
 `http://localhost/posts?title=*Test*&!body=*sample*`
 
-This will search for all records where the title contains **Test** OR the body contains **sample**.
+This will search for all records where the title contains **Test** OR the body contains **sample**. To perform *orWhere*, append an exclamation sign to the ampersand: &!
 
 `http://localhost/posts?title!=Test&body=*foobar*&created_at>=2018`
 
@@ -65,12 +65,14 @@ Filter where `created_at` is greater than or equal (`>=`) to `2018`
 
 ## Filtering on Relationships
 
-Filtering through relationships is as simple as delimiting the relationship tree with arrows (`->`):
+Filtering through relationships is as simple as delimiting the relationship tree with arrows (`->`) and then defining the allowed relations to filer:
 
-Example:
+Define the filterables:
+`Post::withFilters('threads.comments.title')->get()`
+
+Perform the HTTP call:
 `http://localhost?threads->comments->title=*foobar*`
 
-**Note:** The `getQueryables` array would need to return the `threads.comments.title` as a queryable attribute in order for this to work.
 
 ## Ordering Results
 
@@ -95,9 +97,3 @@ Add a second value of `asc` or `desc` to define the direction of the ordering:
 | `=`      | Like (Case-Insenitive)   | `column=*value*`                |
 | `=~`     | Where In                 | `column=~value1,value2,value3`  |
 | `!=~`    | Where Not In             | `column!=~value1,value2,value3` |
-
-# Roadmap
-
--   Add orWhere documentation
--   Filter on appendages
--   Filter on collections
