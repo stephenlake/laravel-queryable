@@ -65,7 +65,7 @@ Filter where `created_at` is greater than or equal (`>=`) to `2018`
 
 ## Filtering on Relationships
 
-Filtering through relationships is as simple as delimiting the relationship tree with arrows (`->`) and then defining the allowed relations to filer:
+Filtering through relationships is as simple as delimiting the relationship tree with arrows (`->`) and then defining the allowed relations to filter as you would normally define the filters:
 
 Define the filterables:
 `Post::withFilters('threads.comments.title')->get()`
