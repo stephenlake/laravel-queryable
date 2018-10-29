@@ -27,7 +27,21 @@ Install the package via composer.
 
     composer require stephenlake/laravel-queryable
 
-#### See [documentation](https://stephenlake.github.io/laravel-queryable/) for usage.
+Define filters on your model:
+
+    YourModel::withFilters(['name', 'content', 'created_at'])->get();
+
+Then dynamic queryables to your HTTP routes:
+
+    https://www.example.org?name=Awesome&content=*awesome*&created_at>=2018
+
+This produces
+
+    YourModel::where('name', 'Awesome')
+             ->where('content', 'like', '%awesome%')
+             ->where('created_at, '>=', '2018')
+             
+#### See [documentation](https://stephenlake.github.io/laravel-queryable/) for further usage.
 
 ## License
 
