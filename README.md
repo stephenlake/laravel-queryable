@@ -39,7 +39,7 @@ Then add dynamic queryables to your HTTP routes:
 
     https://www.example.org?name=Awesome&content=*awesome*&created_at>=2018
 
-This produces
+This automatically adds the following to the query builder:
 
     YourModel::where('name', 'Awesome')
              ->where('content', 'like', '%awesome%')
