@@ -26,12 +26,16 @@ Made with ❤️ by [Stephen Lake](http://stephenlake.github.io/)
 Install the package via composer.
 
     composer require stephenlake/laravel-queryable
+    
+Add the trait to your model:
+
+    use \Queryable\Traits\QueryParamFilterable;
 
 Define filters on your model:
 
     YourModel::withFilters(['name', 'content', 'created_at'])->get();
 
-Then dynamic queryables to your HTTP routes:
+Then add dynamic queryables to your HTTP routes:
 
     https://www.example.org?name=Awesome&content=*awesome*&created_at>=2018
 
@@ -41,7 +45,7 @@ This produces
              ->where('content', 'like', '%awesome%')
              ->where('created_at, '>=', '2018')
              
-#### See [documentation](https://stephenlake.github.io/laravel-queryable/) for further usage.
+#### See [documentation](https://stephenlake.github.io/laravel-queryable/) for the full list of available operators and further usage.
 
 ## License
 
