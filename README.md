@@ -7,18 +7,13 @@
 </h6>
 
 <p align="center">
-    <a href="https://travis-ci.org/stephenlake/laravel-queryable">
-        <img src="https://img.shields.io/travis/stephenlake/laravel-queryable/master.svg?style=for-the-badge&logo=elastic-stack&logoColor=white" alt="">
-    </a>
-    <a href="https://github.com/stephenlake/laravel-queryable">
-        <img src="https://img.shields.io/github/release/stephenlake/laravel-queryable.svg?style=for-the-badge&logo=vagrant&logoColor=white" alt="">
-    </a>
-    <a href="https://github.com/stephenlake/laravel-queryable/LICENSE.md">
-        <img src="https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge&logo=read-the-docs&logoColor=white" alt="">
-    </a>
-    <a href="https://packagist.org/packages/stephenlake/laravel-queryable">
-        <img src="https://img.shields.io/packagist/dt/stephenlake/laravel-queryable.svg?style=for-the-badge&logo=codeigniter&logoColor=white" alt="">
-    </a>
+<a href="https://travis-ci.org/stephenlake/laravel-queryable"><img src="https://img.shields.io/travis/stephenlake/laravel-queryable/master.svg?style=flat-square" alt=""></a>
+<a href="https://github.styleci.io/repos/149042065"><img src="https://github.styleci.io/repos/149042065/shield?branch=master&style=flat-square" alt=""></a>
+<a href="https://github.com/stephenlake/laravel-queryable"><img src="https://img.shields.io/github/release/stephenlake/laravel-queryable.svg?style=flat-square" alt=""></a>
+<a href="https://github.com/stephenlake/laravel-queryable/LICENSE.md"><img src="https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square" alt=""></a>
+<a href="https://packagist.org/packages/stephenlake/laravel-queryable">
+<img src="https://img.shields.io/packagist/dt/stephenlake/laravel-queryable.svg?style=flat-square" alt="">
+</a>
 </p>
 
 <br><br>
