@@ -19,13 +19,6 @@ trait QueryParamFilterable
     private $databaseDriver;
 
     /**
-     * Debugging.
-     *
-     * @var bool
-     */
-    private $debugging;
-
-    /**
      * Query scope to apply filters..
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
@@ -42,8 +35,6 @@ trait QueryParamFilterable
         if (count($this->queryables)) {
             $this->parseQueryParamFilterables($query, $filters);
         }
-
-        $this->debug($query->toSql());
 
         return $query;
     }
@@ -62,8 +53,6 @@ trait QueryParamFilterable
                 $filters[0] = substr($filters[0], 1);
             }
         }
-
-        $this->debug(print_r($filters, true), false);
 
         foreach ($filters as $rawFilter) {
             if (str_contains($rawFilter, '!=~')) {
@@ -115,8 +104,6 @@ trait QueryParamFilterable
      */
     private function parseFilter($query, $column, $operator, $value, $isOr = false)
     {
-        $this->debug(print_r(compact('column', 'operator', 'value', 'isOr'), true));
-
         $value = $value == 'NULL' ? null : $value;
 
         switch ($operator) {
@@ -191,22 +178,6 @@ trait QueryParamFilterable
         }
 
         return $query->$operation("LOWER($column) $operator ?", [strtolower($value)]);
-    }
-
-    /**
-     * Debug queries.
-     *
-     * @return void
-     */
-    private function debug($output, $append = true)
-    {
-        if ($this->debugging === true) {
-            if ($append) {
-                file_put_contents(base_path('queryables.txt'), $output.PHP_EOL.PHP_EOL, FILE_APPEND);
-            } else {
-                file_put_contents(base_path('queryables.txt'), $output);
-            }
-        }
     }
 
     /**
