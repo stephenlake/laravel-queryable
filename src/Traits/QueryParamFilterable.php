@@ -106,34 +106,27 @@ trait QueryParamFilterable
     {
         $value = $value == 'NULL' ? null : $value;
 
-        switch ($operator) {
-          case '=':
-          case '!=':
-          case '>':
-          case '<':
-          case '>=':
-          case '<=':
-              if (ends_with($value, '*') || starts_with($value, '*')) {
-                  if (starts_with($operator, '!')) {
-                      $operator = $this->databaseDriver == 'pgsql' ? 'NOT ILIKE' : 'NOT LIKE';
-                  } else {
-                      $operator = $this->databaseDriver == 'pgsql' ? 'ILIKE' : 'LIKE';
-                  }
-                  $value = str_replace('*', '%', $value);
-              }
-              $this->queryParamFilterQueryConstruct($query, $column, $value, $isOr ? 'orWhere' : 'where', $operator);
-              break;
-
-          case '!=~':
-              $value = explode(',', $value);
-              $this->queryParamFilterQueryConstruct($query, $column, $value, $isOr ? 'orWhereNotIn' : 'whereNotIn');
-              break;
-
-          case '=~':
-              $value = explode(',', $value);
-              $this->queryParamFilterQueryConstruct($query, $column, $value, $isOr ? 'orWhereIn' : 'whereIn');
-              break;
+        if (in_array($operator, ['=', '!=', '>', '<', '>=', '<='], true)) {
+            if (ends_with($value, '*') || starts_with($value, '*')) {
+                if (starts_with($operator, '!')) {
+                    $operator = $this->databaseDriver == 'pgsql' ? 'NOT ILIKE' : 'NOT LIKE';
+                } else {
+                    $operator = $this->databaseDriver == 'pgsql' ? 'ILIKE' : 'LIKE';
+                }
+                $value = str_replace('*', '%', $value);
+            }
+            $compare = $isOr ? 'orWhere' : 'where';
+        } elseif ($operator == '!=~') {
+            $value = explode(',', $value);
+            $compare = $isOr ? 'orWhereNotIn' : 'whereNotIn';
+            $operator = 'whereNotIn';
+        } elseif ($operator == '=~') {
+            $value = explode(',', $value);
+            $compare = $isOr ? 'orWhereIn' : 'whereIn';
+            $operator = false;
         }
+
+        $this->queryParamFilterQueryConstruct($query, $column, $value, $compare, $operator);
     }
 
     /**
