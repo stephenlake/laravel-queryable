@@ -93,7 +93,7 @@ trait QueryParamFilterable
             }
         }
 
-        if ($orderBy = request()->query('orderBy', false)) {
+        if (($orderBy = request()->query('orderBy'))) {
             $value = explode(',', $orderBy);
             $query->orderBy($value[0], $value[1] ?? 'asc');
         }
