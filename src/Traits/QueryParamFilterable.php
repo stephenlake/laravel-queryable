@@ -105,6 +105,7 @@ trait QueryParamFilterable
     private function parseFilter($query, $column, $operator, $value, $isOr = false)
     {
         $value = $value == 'NULL' ? null : $value;
+        $compare = null;
 
         if (in_array($operator, ['=', '!=', '>', '<', '>=', '<='], true)) {
             if (ends_with($value, '*') || starts_with($value, '*')) {
