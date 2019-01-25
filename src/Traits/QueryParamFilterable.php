@@ -212,7 +212,7 @@ trait QueryParamFilterable
     /**
      * Get the models database connection.
      *
-     * @return Illuminate\Database\Connection;
+     * @return Illuminate\Database\Connection
      */
     abstract public function getConnection();
 }
