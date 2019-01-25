@@ -25,6 +25,15 @@ trait QueryParamFilterable
      */
     private $debugging;
 
+    /**
+    * Query scope to apply filters..
+    *
+    * @param \Illuminate\Database\Eloquent\Builder $query
+    * @param array $filterable
+    * @param array|null $filters
+    *
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
     public function scopeWithFilters($query, $filterable, $filters = null)
     {
         $this->databaseDriver = $this->getConnection()->getDriverName();
@@ -168,6 +177,11 @@ trait QueryParamFilterable
         }
     }
 
+    /**
+     * Append queries to query builder.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
     private function appendQuery($query, $operation, $column, $operator, $value)
     {
         $operation = "{$operation}Raw";
@@ -179,6 +193,11 @@ trait QueryParamFilterable
         return $query->$operation("LOWER($column) $operator ?", [strtolower($value)]);
     }
 
+    /**
+     * Debug queries.
+     *
+     * @return void
+     */
     private function debug($output, $append = true)
     {
         if ($this->debugging === true) {
@@ -188,5 +207,15 @@ trait QueryParamFilterable
                 file_put_contents(base_path('queryables.txt'), $output);
             }
         }
+    }
+
+    /**
+     * Get the models database connection.
+     *
+     * @return Illuminate\Database\Connection;
+     */
+    public function getConnection()
+    {
+        return parent::getConnection();
     }
 }
