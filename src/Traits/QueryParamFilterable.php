@@ -119,7 +119,7 @@ trait QueryParamFilterable
         } elseif ($operator == '!=~') {
             $value = explode(',', $value);
             $compare = $isOr ? 'orWhereNotIn' : 'whereNotIn';
-            $operator = 'whereNotIn';
+            $operator = false;
         } elseif ($operator == '=~') {
             $value = explode(',', $value);
             $compare = $isOr ? 'orWhereIn' : 'whereIn';
