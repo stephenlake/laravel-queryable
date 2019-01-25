@@ -152,7 +152,7 @@ trait QueryParamFilterable
     /**
      * Append queries to query builder.
      *
-     * @return void
+     * @return \Illuminate\Database\Eloquent\Builder
      */
     private function queryParamFilterQueryConstruct($query, $column, $value, $operation, $operator = false)
     {
@@ -212,7 +212,7 @@ trait QueryParamFilterable
     /**
      * Get the models database connection.
      *
-     * @return Illuminate\Database\Connection
+     * @return \Illuminate\Database\Connection
      */
     abstract public function getConnection();
 }
