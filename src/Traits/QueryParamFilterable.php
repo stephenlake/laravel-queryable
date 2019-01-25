@@ -26,14 +26,14 @@ trait QueryParamFilterable
     private $debugging;
 
     /**
-    * Query scope to apply filters..
-    *
-    * @param \Illuminate\Database\Eloquent\Builder $query
-    * @param array $filterable
-    * @param array|null $filters
-    *
-    * @return \Illuminate\Database\Eloquent\Builder
-    */
+     * Query scope to apply filters..
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param array                                 $filterable
+     * @param array|null                            $filters
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
     public function scopeWithFilters($query, $filterable, $filters = null)
     {
         $this->databaseDriver = $this->getConnection()->getDriverName();
