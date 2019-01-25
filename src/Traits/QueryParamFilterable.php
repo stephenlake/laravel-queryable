@@ -164,23 +164,13 @@ trait QueryParamFilterable
     private function getOperatorFromRawFilter($rawFilter)
     {
         $operator = '';
+        $operators = ['!=~', '=~', '>=', '<=', '!=', '=', '>', '<'];
 
-        if (str_contains($rawFilter, '!=~')) {
-            $operator = '!=~';
-        } elseif (str_contains($rawFilter, '=~')) {
-            $operator = '=~';
-        } elseif (str_contains($rawFilter, '>=')) {
-            $operator = '>=';
-        } elseif (str_contains($rawFilter, '<=')) {
-            $operator = '<=';
-        } elseif (str_contains($rawFilter, '!=')) {
-            $operator = '!=';
-        } elseif (str_contains($rawFilter, '=')) {
-            $operator = '=';
-        } elseif (str_contains($rawFilter, '>')) {
-            $operator = '>';
-        } elseif (str_contains($rawFilter, '<')) {
-            $operator = '<';
+        foreach ($operators as $op) {
+            if (str_contains($rawFilter, $op)) {
+                $operator = $op;
+                break;
+            }
         }
 
         return $operator;
