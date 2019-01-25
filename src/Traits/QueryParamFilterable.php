@@ -55,25 +55,7 @@ trait QueryParamFilterable
         }
 
         foreach ($filters as $rawFilter) {
-            if (str_contains($rawFilter, '!=~')) {
-                $operator = '!=~';
-            } elseif (str_contains($rawFilter, '=~')) {
-                $operator = '=~';
-            } elseif (str_contains($rawFilter, '>=')) {
-                $operator = '>=';
-            } elseif (str_contains($rawFilter, '<=')) {
-                $operator = '<=';
-            } elseif (str_contains($rawFilter, '!=')) {
-                $operator = '!=';
-            } elseif (str_contains($rawFilter, '=')) {
-                $operator = '=';
-            } elseif (str_contains($rawFilter, '>')) {
-                $operator = '>';
-            } elseif (str_contains($rawFilter, '<')) {
-                $operator = '<';
-            } else {
-                break;
-            }
+            $operator = $this->getOperatorFromRawFilter($rawFilter);
 
             $params = explode($operator, $rawFilter);
 
@@ -172,6 +154,36 @@ trait QueryParamFilterable
         }
 
         return $query->$operation("LOWER($column) $operator ?", [strtolower($value)]);
+    }
+
+    /**
+     * Get operator from raw filter.
+     *
+     * @return string
+     */
+    private function getOperatorFromRawFilter($rawFilter)
+    {
+        $operator = '';
+
+        if (str_contains($rawFilter, '!=~')) {
+            $operator = '!=~';
+        } elseif (str_contains($rawFilter, '=~')) {
+            $operator = '=~';
+        } elseif (str_contains($rawFilter, '>=')) {
+            $operator = '>=';
+        } elseif (str_contains($rawFilter, '<=')) {
+            $operator = '<=';
+        } elseif (str_contains($rawFilter, '!=')) {
+            $operator = '!=';
+        } elseif (str_contains($rawFilter, '=')) {
+            $operator = '=';
+        } elseif (str_contains($rawFilter, '>')) {
+            $operator = '>';
+        } elseif (str_contains($rawFilter, '<')) {
+            $operator = '<';
+        }
+
+        return $operator;
     }
 
     /**
