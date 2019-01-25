@@ -214,8 +214,5 @@ trait QueryParamFilterable
      *
      * @return Illuminate\Database\Connection;
      */
-    public function getConnection()
-    {
-        return parent::getConnection();
-    }
+    abstract public function getConnection();
 }
