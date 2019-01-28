@@ -1,5 +1,5 @@
 <h6 align="center">
-    <img src="https://raw.githubusercontent.com/stephenlake/laravel-queryable/master/docs/assets/laravel-queryable.png"/>
+    <img src="https://raw.githubusercontent.com/stephenlake/laravel-queryable/master/docs/assets/laravel-queryable-banner.png"/>
 </h6>
 
 <h6 align="center">
