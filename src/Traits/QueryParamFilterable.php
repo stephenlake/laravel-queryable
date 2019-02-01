@@ -57,18 +57,20 @@ trait QueryParamFilterable
         foreach ($filters as $rawFilter) {
             $operator = $this->getOperatorFromRawFilter($rawFilter);
 
-            $params = explode($operator, $rawFilter);
+            if ($operator) {
+                $params = explode($operator, $rawFilter);
 
-            if (count($params) == 2) {
-                $column = $params[0];
-                $values = $params[1];
+                if (count($params) == 2) {
+                    $column = $params[0];
+                    $values = $params[1];
 
-                if ($isOr = starts_with($column, '!')) {
-                    $column = substr($column, 1);
-                }
+                    if ($isOr = starts_with($column, '!')) {
+                        $column = substr($column, 1);
+                    }
 
-                if (in_array($column, $this->queryables)) {
-                    $this->parseFilter($query, $column, $operator, $values, $isOr);
+                    if (in_array($column, $this->queryables)) {
+                        $this->parseFilter($query, $column, $operator, $values, $isOr);
+                    }
                 }
             }
         }
@@ -163,7 +165,7 @@ trait QueryParamFilterable
      */
     private function getOperatorFromRawFilter($rawFilter)
     {
-        $operator = '';
+        $operator = null;
         $operators = ['!=~', '=~', '>=', '<=', '!=', '=', '>', '<'];
 
         foreach ($operators as $op) {
