@@ -1,25 +1,11 @@
-<h6 align="center">
-    <img src="https://raw.githubusercontent.com/stephenlake/laravel-queryable/master/docs/assets/laravel-queryable-banner.png" width="420"/>
-</h6>
-
-<h6 align="center">
-    HTTP query parameter based model searching and filtering for Laravel Models.
-</h6>
-
-<p align="center">
-<a href="https://travis-ci.org/stephenlake/laravel-queryable"><img src="https://img.shields.io/travis/stephenlake/laravel-queryable/master.svg?style=flat-square" alt=""></a>
-<a href="https://github.styleci.io/repos/149042065"><img src="https://github.styleci.io/repos/149042065/shield?branch=master&style=flat-square" alt=""></a>
-<a href="https://scrutinizer-ci.com/g/stephenlake/laravel-queryable"><img src="https://img.shields.io/scrutinizer/g/stephenlake/laravel-queryable.svg?style=flat-square" alt=""></a>
-<a href="https://packagist.org/packages/stephenlake/laravel-queryable">
-<img src="https://img.shields.io/packagist/dt/stephenlake/laravel-queryable.svg?style=flat-square" alt="">
-</a>
-<a href="https://github.com/stephenlake/laravel-queryable"><img src="https://img.shields.io/github/release/stephenlake/laravel-queryable.svg?style=flat-square" alt=""></a>
-<a href="https://github.com/stephenlake/laravel-queryable/LICENSE.md"><img src="https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square" alt=""></a>
-</p>
-
-<br><br>
-
 # Laravel Queryable
+
+![tests](https://img.shields.io/travis/stephenlake/laravel-queryable/master.svg?style=flat-square)
+![styleci](https://github.styleci.io/repos/149042065/shield?branch=master&style=flat-square)
+![scrutinzer](https://img.shields.io/scrutinizer/g/stephenlake/laravel-queryable.svg?style=flat-square)
+![downloads](https://img.shields.io/packagist/dt/stephenlake/laravel-queryable.svg?style=flat-square)
+![release](https://img.shields.io/github/release/stephenlake/laravel-queryable.svg?style=flat-square)
+![license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)
 
 **Laravel Queryable** is a light weight package containing simple injectable model traits with configurable attributes to perform powerful and flexible queries of your models dynamically from static HTTP routes.
 
