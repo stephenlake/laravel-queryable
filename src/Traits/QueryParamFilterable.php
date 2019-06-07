@@ -2,6 +2,8 @@
 
 namespace Queryable\Traits;
 
+use Illuminate\Support\Str;
+
 trait QueryParamFilterable
 {
     /**
@@ -61,7 +63,7 @@ trait QueryParamFilterable
                 $params = explode($operator, $rawFilter);
 
                 if (count($params) == 2) {
-                    $column = $params[0];
+                    $column = Str::snake($params[0]);
                     $values = $params[1];
 
                     if ($isOr = starts_with($column, '!')) {
