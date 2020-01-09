@@ -11,7 +11,7 @@
 
 Made with ❤️ by [Stephen Lake](http://stephenlake.github.io/)
 
-## No Longer Maintained
+## No Longer Maintained :exclamation:
 This package is no longer maintained as a far more flexible package exists, it is highly recommended to use [Spatie's Laravel Query Builder](https://docs.spatie.be/laravel-query-builder/v2/introduction/) instead. If you would like to take over this package as maintainer, please get in touch with me.
 
 ## Getting Started
